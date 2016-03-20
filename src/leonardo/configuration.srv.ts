@@ -35,6 +35,7 @@ export function leoConfiguration (leoStorage, $rootScope: IRootScopeService) {
   };
 
   function upsertOption(state, name, active) {
+    console.log('hello');
     var statesStatus = leoStorage.getStates();
     statesStatus[state] = {
       name: name || findStateOption(state).name,

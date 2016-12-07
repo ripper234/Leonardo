@@ -1,4 +1,28 @@
 //<!-- if dev -->
+
+function callback(data) {
+  console.log(data);
+}
+function observe() {
+  var target = document.body;
+
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      console.log(mutation);
+      if (mutation.addedNodes && mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'SCRIPT') {
+        console.log();
+        mutation.addedNodes[0].remove();
+      }
+    });
+  });
+
+  var config = { attributes: false, childList: true, characterData: false, subtree: false };
+
+// pass in the target node, as well as the observer options
+  observer.observe(target, config);
+
+}
+
 angular.module('angular-il', ['ui.router'])
 //<!-- else -->
 //angular.module('angular-il', ['ui.router'])
@@ -46,6 +70,7 @@ angular.module('angular-il', ['ui.router'])
         controller: ['$rootScope', '$http', '$state', '$scope', 'characters', function($rootScope, $http, $state, $scope, characters) {
           this.type = 'turtles';
           this.size = 'big';
+          observe();
           if (characters instanceof Array) {
             this.list = characters;
           }
@@ -55,6 +80,8 @@ angular.module('angular-il', ['ui.router'])
           }
 
           this.create = function () {
+            $http.jsonp('http://ip.jsontest.com/?callback=callback');
+
             $rootScope.loading = true;
             $http({
               url: '/character',

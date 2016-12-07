@@ -4290,3 +4290,17 @@ exports.default = Utils;
 "  padding: 5px 10px;\n" +
 "  border-radius: 2px;\n" +
 "}"));
+
+//Listen to events from the extension
+if (chrome) {
+    try {
+        chrome.runtime.onMessage.addListener(
+            function(request, sender, sendResponse) {
+                if (request.message == 'showLeo') {
+                    console.log("Leo got message: Show leo");
+                }
+            }
+        }
+    }
+}
+            

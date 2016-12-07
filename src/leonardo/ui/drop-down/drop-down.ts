@@ -13,7 +13,8 @@ export default class DropDown {
       private items,
       private activeItem,
       private isDisabled: boolean,
-      private onSelectItem: Function) {
+      private onSelectItem: Function,
+      private onRemoveItem: Function) {
     this.randomID = Utils.guidGenerator();
     this.viewNode = Utils.getElementFromHtml(`<div id="leonardo-dropdown-${this.randomID}" class="leonardo-dropdown"></div>`);
     document.body.addEventListener('click', this.closeDropDownBinded, false);
@@ -29,7 +30,7 @@ export default class DropDown {
     this.viewNode.innerHTML = `
           <div class="leonardo-dropdown-selected" ${this.isDisabledToken()}>
             <span class="leonardo-dropdown-selected-text">${this.activeItem.name}</span>
-            <span class="leonardo-dropdown-selected-arrow">></span>
+            <span class="leonardo-dropdown-selected-arrow"></span>
           </div>
           <div class="leonardo-dropdown-options">
             <ul class="leonardo-dropdown-list">${this.getItems().join('')}</ul>
@@ -114,7 +115,7 @@ export default class DropDown {
 
   private getItems() {
     return this.items.map((item: {name: string}) => {
-      return `<li class="leonardo-dropdown-item"><span class="leonardo-dropdown-item-text">${item.name}</span><span class="leonardo-dropdown-item-x">X</span></li>`
+      return `<li class="leonardo-dropdown-item"><span class="leonardo-dropdown-item-text">${item.name}</span><span class="leonardo-dropdown-item-x"></span></li>`
     })
   }
 
@@ -126,10 +127,15 @@ export default class DropDown {
     if(this.items.length <= 1){
       return;
     }
-    this.items = this.items.filter((item) => {
-      return item.name === item.innerHTML;
+    let removedItem;
+    this.items = this.items.filter((curItem) => {
+      if(curItem.name === item.querySelector('.leonardo-dropdown-item-text')['innerHTML']){
+        removedItem = curItem;
+      }
     });
     this.viewNode.querySelector('.leonardo-dropdown-list').removeChild(item);
+    this.onRemoveItem(removedItem);
+
   }
 
   private onDestroy(){

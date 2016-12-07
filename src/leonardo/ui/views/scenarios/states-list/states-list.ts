@@ -14,7 +14,7 @@ export default class StatesList {
   constructor() {
     this.viewNode = Utils.getElementFromHtml(`<div id="leonardo-states-list" class="leonardo-states-list"></div>`);
     Events.on(Events.FILTER_STATES, this.onFilterStates.bind(this));
-    Events.on(Events.ADD_SCENARIO, this.addScenario.bind(this));
+    Events.on(Events.ADD_SCENARIO, this.addScenario.bind(this));    
   }
 
   get() {
@@ -91,4 +91,5 @@ export default class StatesList {
       from_local: true
     }, true);
   }
+
 }

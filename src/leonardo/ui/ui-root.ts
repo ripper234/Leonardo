@@ -10,7 +10,16 @@ export default class UIRoot {
   initBinded: EventListener = this.init.bind(this);
 
   constructor() {
-    document.addEventListener('DOMContentLoaded', this.initBinded, false);
+    switch (document.readyState) {
+      default:
+      case 'loading':
+        document.addEventListener('DOMContentLoaded', this.initBinded, false);
+        break;
+      case 'interactive':
+      case 'complete':
+        this.init();
+        break;
+    }
   }
 
   init() {
@@ -20,7 +29,11 @@ export default class UIRoot {
     this.mainView = new MainView();
     this.leonardoApp.appendChild(this.launcher.get());
     this.leonardoApp.appendChild(this.mainView.get());
+    document.body.addEventListener('leonardo:toggle:states', this.toggleAllStates.bind(this));
     document.body.appendChild(this.leonardoApp);
   }
 
+  private toggleAllStates(event: CustomEvent){
+    Leonardo.toggleActivateAll(event.detail);
+  }
 }

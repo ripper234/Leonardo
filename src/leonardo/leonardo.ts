@@ -21,3 +21,23 @@ new Sinon();
 
 //Init UI
 new UIRoot();
+
+if (chrome) {
+    try {
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+        if (request.message == "toggleEnabled") {
+            var enabled = toggleEnabled();
+            sendResponse({status: "ok", enabled: enabled});
+            return;
+        }
+        if (request.message == 'isLeoEnabled') {
+            sendResponse({status: "ok", enabled: isEnabled()});
+            return;
+        }
+    });
+}
+    catch (e) {
+        console.log("Leonardo Exception: " + e);
+    }
+}
